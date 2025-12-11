@@ -1,0 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Cal+Sans&family=Manrope:wght@200..800&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+body::-webkit-scrollbar,
+.invisible-scrollbar::-webkit-scrollbar {
+  display: none;
+}
