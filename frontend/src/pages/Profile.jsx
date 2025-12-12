@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { updateUserProfile } from "../store/slices/authSlice";
+import { fetchProfile, updateUserProfile } from "../store/slices/authSlice";
 import { ArrowLeft, Save } from "lucide-react";
 
 export default function Profile() {
@@ -30,26 +30,16 @@ export default function Profile() {
     const root = document.documentElement;
     if (!root) return;
 
-    const userTheme = user?.themePreference ?? user?.theme ?? null;
-    const initialTheme = userTheme || formData.themePreference || "light";
-
-    if (initialTheme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-  }, [user]);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (!root) return;
-
     if (formData.themePreference === "dark") {
       root.classList.add("dark");
     } else {
       root.classList.remove("dark");
     }
   }, [formData.themePreference]);
+
+  useEffect(() => {
+    dispatch(fetchProfile());
+  }, [dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -5,9 +5,8 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import TaskList from "./pages/TaskList";
 import Profile from "./pages/Profile";
-import { useEffect, useState } from "react";
 import NotFound from "./components/NotFound";
-import { fetchProfile } from "./store/slices/authSlice";
+import { useEffect, useState } from "react";
 
 function PrivateRoute({ children }) {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -15,12 +14,22 @@ function PrivateRoute({ children }) {
 }
 
 function App() {
-  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    // attempt to load current user from server using stored token
-    dispatch(fetchProfile());
-  }, [dispatch]);
+    const root = document.documentElement;
+    console.log(root);
+    console.log(user);
+    if (!root) return;
+
+    const initialTheme = user?.themePreference || "light";
+
+    if (initialTheme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+  }, [user]);
 
   const getSystemTheme = () =>
     window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -46,6 +55,7 @@ function App() {
       return () => mediaQuery.removeListener(handleChange);
     }
   }, []);
+
   return (
     <BrowserRouter>
       <Routes>
