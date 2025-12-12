@@ -18,8 +18,6 @@ function App() {
 
   useEffect(() => {
     const root = document.documentElement;
-    console.log(root);
-    console.log(user);
     if (!root) return;
 
     const initialTheme = user?.themePreference || "light";
