@@ -33,7 +33,7 @@ export default function Login() {
             {/* Title */}
             <div className="text-center">
               <h1 className="font-Cal text-3xl text-mainHeading dark:text-dark-mainHeading">
-                TaskApp
+                D-Taskly
               </h1>
               <p className="mt-2 text-sm text-textContent dark:text-dark-subHeading">
                 Welcome back

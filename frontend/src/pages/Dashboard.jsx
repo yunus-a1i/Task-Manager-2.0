@@ -39,7 +39,7 @@ export default function Dashboard() {
             <div className="flex h-16 items-center justify-between">
               <div className="flex items-center">
                 <h1 className="text-2xl font-Cal text-mainHeading dark:text-dark-mainHeading">
-                  TaskApp
+                  D-Taskly
                 </h1>
               </div>
 
@@ -262,7 +262,7 @@ export default function Dashboard() {
         onClose={() => setOpenLogout(false)}
         onConfirm={handleLogout}
         title="Logout"
-        description="Sign out of TaskApp now?"
+        description="Sign out of D-Taskly now?"
         confirmText="Sign out"
       />
     </>
