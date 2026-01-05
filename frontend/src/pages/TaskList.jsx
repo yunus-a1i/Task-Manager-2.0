@@ -15,7 +15,7 @@ import TaskForm from "../components/TaskForm";
 import FilterBar from "../components/FilterBar";
 import SortDropdown from "../components/SortDropdown";
 import { Plus, ArrowLeft, Search } from "lucide-react";
-import NoTask from "../assets/NoTask.jpg"
+import NoTask from "../assets/NoTask.jpg";
 export default function TaskList() {
   const dispatch = useDispatch();
   const {
@@ -54,10 +54,12 @@ export default function TaskList() {
   };
 
   const handleDeleteTask = async (id) => {
-    if (window.confirm("Move this task to trash?")) {
-      await dispatch(deleteTask(id));
-      loadTasks();
-    }
+    // if (window.confirm("Move this task to trash?")) {
+    //   await dispatch(deleteTask(id));
+    //   loadTasks();
+    // }
+    await dispatch(deleteTask(id));
+    loadTasks();
   };
 
   const handleToggleComplete = async (id, completed) => {
@@ -135,7 +137,11 @@ export default function TaskList() {
               </div>
             ) : tasks.length === 0 ? (
               <div className="text-center py-4 flex flex-col items-center justify-center">
-                <img src={NoTask} alt="Task not found" className="max-w-md border border-border dark:border-dark-border rounded-lg mb-2"/>
+                <img
+                  src={NoTask}
+                  alt="Task not found"
+                  className="max-w-md border border-border dark:border-dark-border rounded-lg mb-2"
+                />
                 <p className="text-textContent dark:text-dark-subHeading text-sm">
                   No tasks found
                 </p>
