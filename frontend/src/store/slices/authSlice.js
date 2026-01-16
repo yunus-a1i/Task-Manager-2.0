@@ -1,3 +1,4 @@
+// src/store/slices/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { authAPI } from '../../api/auth.api';
 
@@ -30,7 +31,12 @@ export const registerUser = createAsyncThunk(
 );
 
 export const logoutUser = createAsyncThunk('auth/logout', async () => {
-  await authAPI.logout();
+  try {
+    await authAPI.logout();
+  } catch (error) {
+    // Continue with logout even if API fails
+    console.error('Logout API error:', error);
+  }
   localStorage.removeItem('accessToken');
   localStorage.removeItem('refreshToken');
 });
@@ -65,10 +71,17 @@ const authSlice = createSlice({
   reducers: {
     clearError: (state) => {
       state.error = null;
+    },
+    clearAuth: (state) => {
+      state.user = null;
+      state.isAuthenticated = false;
+      state.loading = false;
+      state.error = null;
     }
   },
   extraReducers: (builder) => {
     builder
+      // Login
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -77,12 +90,12 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
-        console.log(action.payload)
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
+      // Register
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -96,18 +109,35 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      // Logout
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.isAuthenticated = false;
       })
+      // Fetch Profile
+      .addCase(fetchProfile.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(fetchProfile.fulfilled, (state, action) => {
+        state.loading = false;
         state.user = action.payload.user;
       })
+      .addCase(fetchProfile.rejected, (state, action) => {
+        state.loading = false;
+        // If profile fetch fails (e.g., token expired), clear auth
+        if (action.payload === 'Token expired' || action.payload === 'Not authorized') {
+          state.isAuthenticated = false;
+          state.user = null;
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+        }
+      })
+      // Update Profile
       .addCase(updateUserProfile.fulfilled, (state, action) => {
         state.user = action.payload.user;
       });
   }
 });
 
-export const { clearError } = authSlice.actions;
+export const { clearError, clearAuth } = authSlice.actions;
 export default authSlice.reducer;
