@@ -1,3 +1,4 @@
+// server.js
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -10,6 +11,8 @@ import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/user.routes.js';
 import taskRoutes from './routes/task.routes.js';
 import categoryRoutes from './routes/category.routes.js';
+import adminRoutes from './routes/admin.routes.js';      // ADD THIS
+import setupRoutes from './routes/setup.routes.js';      // ADD THIS
 
 // Load environment variables
 dotenv.config();
@@ -34,6 +37,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/admin', adminRoutes);      // ADD THIS
+app.use('/api/setup', setupRoutes);      // ADD THIS
 
 // Health check
 app.get('/api/health', (req, res) => {

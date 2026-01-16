@@ -9,6 +9,7 @@ export const getProfile = async (req, res) => {
         name: user.name,
         email: user.email,
         avatar: user.avatar,
+        role: user.role,
         notificationPreference: user.notificationPreference,
         themePreference: user.themePreference,
         createdAt: user.createdAt
