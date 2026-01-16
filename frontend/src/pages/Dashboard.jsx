@@ -1,3 +1,4 @@
+// src/pages/Dashboard.jsx
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
@@ -10,6 +11,7 @@ import {
   LogOut,
   User,
   ListTodo,
+  Shield,
 } from "lucide-react";
 import LogoutModal from "../components/LogoutModal";
 
@@ -30,6 +32,8 @@ export default function Dashboard() {
     navigate("/login");
   };
 
+  const isAdmin = user?.role === "admin";
+
   return (
     <>
       <div className="min-h-screen bg-body dark:bg-dark-body font-Manrope">
@@ -44,6 +48,16 @@ export default function Dashboard() {
               </div>
 
               <div className="flex items-center gap-6 text-sm">
+                {/* Admin Link - Only show for admins */}
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    className="flex items-center gap-2 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium"
+                  >
+                    <Shield className="w-4 h-4" />
+                    <span>Admin</span>
+                  </Link>
+                )}
                 <Link
                   to="/tasks"
                   className="flex items-center gap-2 text-subHeading dark:text-dark-textContent hover:text-mainHeading dark:hover:text-dark-mainHeading"
@@ -62,7 +76,6 @@ export default function Dashboard() {
                   onClick={() => setOpenLogout(true)}
                   className="flex items-center gap-2 text-textContent dark:text-dark-subHeading hover:text-red-600 text-sm"
                 >
-                  {" "}
                   <LogOut className="w-4 h-4" /> <span>Logout</span>
                 </button>
               </div>
@@ -73,10 +86,17 @@ export default function Dashboard() {
         {/* Main */}
         <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h2 className="text-2xl font-semibold text-mainHeading dark:text-dark-mainHeading">
-              Welcome back, {user?.name}!{" "}
-              <span className="inline-block">👋</span>
-            </h2>
+            <div className="flex items-center gap-3">
+              <h2 className="text-2xl font-semibold text-mainHeading dark:text-dark-mainHeading">
+                Welcome back, {user?.name}!{" "}
+                <span className="inline-block">👋</span>
+              </h2>
+              {isAdmin && (
+                <span className="px-2 py-0.5 text-xs font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 rounded-full">
+                  Admin
+                </span>
+              )}
+            </div>
             <p className="mt-1 text-sm text-textContent dark:text-dark-subHeading">
               Here&apos;s a quick overview of your tasks.
             </p>
@@ -185,9 +205,11 @@ export default function Dashboard() {
                           className="h-2 rounded-full bg-mainHeading dark:bg-dark-mainHeading"
                           style={{
                             width: `${
-                              (analytics.priorityBreakdown.high /
-                                analytics.stats.totalTasks) *
-                              100
+                              analytics.stats.totalTasks > 0
+                                ? (analytics.priorityBreakdown.high /
+                                    analytics.stats.totalTasks) *
+                                  100
+                                : 0
                             }%`,
                           }}
                         />
@@ -208,9 +230,11 @@ export default function Dashboard() {
                           className="h-2 rounded-full bg-subHeading dark:bg-dark-subHeading"
                           style={{
                             width: `${
-                              (analytics.priorityBreakdown.medium /
-                                analytics.stats.totalTasks) *
-                              100
+                              analytics.stats.totalTasks > 0
+                                ? (analytics.priorityBreakdown.medium /
+                                    analytics.stats.totalTasks) *
+                                  100
+                                : 0
                             }%`,
                           }}
                         />
@@ -231,9 +255,11 @@ export default function Dashboard() {
                           className="h-2 rounded-full bg-textContent dark:bg-dark-textContent"
                           style={{
                             width: `${
-                              (analytics.priorityBreakdown.low /
-                                analytics.stats.totalTasks) *
-                              100
+                              analytics.stats.totalTasks > 0
+                                ? (analytics.priorityBreakdown.low /
+                                    analytics.stats.totalTasks) *
+                                  100
+                                : 0
                             }%`,
                           }}
                         />
@@ -246,7 +272,7 @@ export default function Dashboard() {
           )}
 
           {/* CTA */}
-          <div className="mt-10">
+          <div className="mt-10 flex flex-wrap gap-4">
             <Link
               to="/tasks"
               className="inline-flex items-center rounded-full bg-mainHeading dark:bg-dark-mainHeading px-6 py-3 text-sm font-medium text-card dark:text-dark-body hover:bg-black dark:hover:bg-white dark:hover:text-dark-body focus:outline-none focus:ring-2 focus:ring-mainHeading dark:focus:ring-dark-mainHeading focus:ring-offset-2 focus:ring-offset-body dark:focus:ring-offset-dark-body"
@@ -254,6 +280,15 @@ export default function Dashboard() {
               <ListTodo className="w-4 h-4 mr-2" />
               View all tasks
             </Link>
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="inline-flex items-center rounded-full border border-purple-600 dark:border-purple-400 px-6 py-3 text-sm font-medium text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 focus:outline-none focus:ring-2 focus:ring-purple-600 dark:focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-body dark:focus:ring-offset-dark-body"
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                Admin Dashboard
+              </Link>
+            )}
           </div>
         </div>
       </div>

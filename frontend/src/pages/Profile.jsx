@@ -1,8 +1,9 @@
+// src/pages/Profile.jsx
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchProfile, updateUserProfile } from "../store/slices/authSlice";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Shield } from "lucide-react";
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -47,6 +48,8 @@ export default function Profile() {
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };
+
+  const isAdmin = user?.role === "admin";
 
   return (
     <div className="min-h-screen bg-body dark:bg-dark-body font-Manrope">
@@ -191,7 +194,7 @@ export default function Profile() {
           <h3 className="text-sm font-semibold text-mainHeading dark:text-dark-mainHeading mb-3">
             Account information
           </h3>
-          <div className="space-y-1 text-sm text-textContent dark:text-dark-subHeading">
+          <div className="space-y-2 text-sm text-textContent dark:text-dark-subHeading">
             <p>
               Member since:{" "}
               {user?.createdAt
@@ -199,8 +202,43 @@ export default function Profile() {
                 : "N/A"}
             </p>
             <p>User ID: {user?.id || "N/A"}</p>
+            <div className="flex items-center gap-2">
+              <span>Role:</span>
+              <span
+                className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full ${
+                  isAdmin
+                    ? "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
+                    : "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                }`}
+              >
+                {isAdmin && <Shield className="w-3 h-3" />}
+                {user?.role || "user"}
+              </span>
+            </div>
           </div>
         </div>
+
+        {/* Admin Quick Access */}
+        {isAdmin && (
+          <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-2xl p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <Shield className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+              <h3 className="text-sm font-semibold text-purple-700 dark:text-purple-400">
+                Admin Access
+              </h3>
+            </div>
+            <p className="text-sm text-purple-600 dark:text-purple-300 mb-4">
+              You have administrator privileges. Access the admin dashboard to manage users, tasks, and system settings.
+            </p>
+            <Link
+              to="/admin"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-600 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2"
+            >
+              <Shield className="w-4 h-4" />
+              Go to Admin Dashboard
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
